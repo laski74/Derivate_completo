@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Derivate — File interattivo completo</title>
+
+  <!-- MathJax CONFIG (prima di caricare la libreria) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --ink: #203040;
+      --muted: #5c6b7a;
+
+      --primary: #5b8def;    /* blu tenue */
+      --primary-2:#9bbcf7;
+      --accent: #6fcf97;     /* verde tenue */
+      --warn: #f2c94c;       /* giallo tenue */
+      --danger:#eb5757;      /* rosso tenue */
+      --lav: #b8a1ff;        /* lavanda */
+
+      --border:#e6edf5;
+      --shadow: 0 10px 25px rgba(16, 24, 40, 0.08);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 700px at 20% 0%, #eef5ff 0%, var(--bg) 60%) fixed;
+      color:var(--ink);
+      line-height:1.45;
+    }
+
+    header{
+      padding: 18px 18px 6px 18px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .title{
+      display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap;
+    }
+    .badge{
+      background: linear-gradient(135deg, var(--primary), var(--lav));
+      color:white;
+      padding:6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing:.3px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+    }
+    h1{ margin:0; font-size: 26px; }
+    .subtitle{ color:var(--muted); margin:6px 0 0 0; font-size: 14px; }
+
+    .wrap{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 18px 26px 18px;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap: 16px;
+    }
+
+    .side{
+      position: sticky;
+      top: 12px;
+      align-self: start;
+      background: rgba(255,255,255,0.65);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .navTitle{
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 6px 6px 10px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .nav button{
+      text-align:left;
+      width:100%;
+      border:1px solid var(--border);
+      background: white;
+      padding:10px 10px;
+      border-radius: 14px;
+      cursor:pointer;
+      color: var(--ink);
+      transition: transform .06s ease, border-color .2s ease, box-shadow .2s ease;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .nav button:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(16,24,40,.06);}
+    .nav button.active{
+      border-color: rgba(91,141,239,.5);
+      box-shadow: 0 10px 24px rgba(91,141,239,.18);
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+    }
+    .nav .dot{
+      width:10px;height:10px;border-radius:99px;margin-top:4px;flex:0 0 auto;
+      background: var(--primary-2);
+    }
+    .nav small{ color:var(--muted); display:block; margin-top:2px; }
+
+    .main{
+      min-width: 0;
+    }
+
+    .panel{
+      display:none;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      backdrop-filter: blur(8px);
+    }
+    .panel.active{ display:block; }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns: 1fr; }
+      .side{ position:relative; top:0; }
+      .grid2{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .kpiRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+    .pill{
+      border:1px solid var(--border);
+      background: #fbfdff;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 13px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .pill b{ font-size: 13px; }
+    .chip{
+      width:10px;height:10px;border-radius:99px;background: var(--accent);
+    }
+
+    .sectionTitle{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      margin: 6px 2px 10px;
+    }
+    .sectionTitle h2{
+      font-size: 18px;
+      margin:0;
+    }
+    .sectionTitle .mini{
+      font-size: 12px; color: var(--muted);
+    }
+
+    /* Accordion */
+    details{
+      background: white;
+      border:1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px 12px;
+      margin: 10px 0;
+    }
+    details[open]{ box-shadow: 0 10px 20px rgba(16,24,40,.06); }
+    summary{
+      cursor:pointer;
+      font-weight:700;
+      outline:none;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .sumRight{
+      display:flex; gap:8px; align-items:center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tag{
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fbfdff;
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .tag.good{ border-color: rgba(111,207,151,.45); background: rgba(111,207,151,.10); color:#1f6d45;}
+    .tag.warn{ border-color: rgba(242,201,76,.55); background: rgba(242,201,76,.12); color:#7a5a00;}
+    .tag.bad{ border-color: rgba(235,87,87,.45); background: rgba(235,87,87,.10); color:#7a1f1f;}
+
+    .callout{
+      border-left: 6px solid var(--primary);
+      background: #f5f9ff;
+      padding: 10px 12px;
+      border-radius: 14px;
+      margin: 10px 0;
+    }
+    .callout.warn{ border-left-color: var(--warn); background: rgba(242,201,76,.12);}
+    .callout.good{ border-left-color: var(--accent); background: rgba(111,207,151,.12);}
+    .callout.bad{ border-left-color: var(--danger); background: rgba(235,87,87,.10);}
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin: 10px 0; }
+    .btn{
+      border:1px solid var(--border);
+      background: white;
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor:pointer;
+      font-weight: 700;
+      color: var(--ink);
+      transition: transform .06s ease, box-shadow .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 20px rgba(16,24,40,.06); }
+    .btn.primary{
+      border-color: rgba(91,141,239,.45);
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+    }
+    .btn.small{ padding: 7px 10px; border-radius: 12px; font-size: 13px; }
+
+    /* Exercise formatting */
+    .ex{
+      border:1px solid var(--border);
+      background:white;
+      border-radius: 16px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+    .exHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .exNum{
+      font-weight: 900;
+      background: rgba(91,141,239,.12);
+      border:1px solid rgba(91,141,239,.25);
+      color:#2d4f9e;
+      border-radius: 12px;
+      padding: 5px 9px;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .exMeta{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .exBody{ margin-top:10px; }
+    .steps{
+      margin-top:10px;
+      border-top:1px dashed var(--border);
+      padding-top:10px;
+      display:none;
+    }
+    .step{
+      border:1px solid var(--border);
+      background:#fbfdff;
+      border-radius: 14px;
+      padding:10px;
+      margin:8px 0;
+    }
+    .checkline{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px;
+    }
+    input[type="text"]{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding:10px 10px;
+      font-size: 14px;
+      min-width: 210px;
+      outline:none;
+    }
+    input[type="text"]:focus{ border-color: rgba(91,141,239,.5); box-shadow: 0 0 0 4px rgba(91,141,239,.12); }
+    .feedback{
+      font-weight: 800;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background:white;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .ok{ border-color: rgba(111,207,151,.5); background: rgba(111,207,151,.10); color:#1f6d45;}
+    .no{ border-color: rgba(235,87,87,.45); background: rgba(235,87,87,.10); color:#7a1f1f;}
+
+    /* Flashcards */
+    .fcTools{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin: 8px 0 12px;
+    }
+    select{
+      border:1px solid var(--border);
+      background:white;
+      border-radius: 12px;
+      padding:10px;
+      font-weight:700;
+      color:var(--ink);
+    }
+    .fcGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .fcGrid{ grid-template-columns: 1fr; }
+    }
+    .flashcard{
+      perspective: 1000px;
+    }
+    .fcInner{
+      position: relative;
+      width: 100%;
+      min-height: 140px;
+      transform-style: preserve-3d;
+      transition: transform .5s ease;
+      border-radius: 18px;
+      border:1px solid var(--border);
+      box-shadow: 0 10px 20px rgba(16,24,40,.06);
+    }
+    .flashcard.flipped .fcInner{ transform: rotateY(180deg); }
+
+    .fcFace{
+      position:absolute;
+      inset:0;
+      backface-visibility: hidden;
+      border-radius: 18px;
+      padding: 12px;
+      background: white;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .fcBack{
+      transform: rotateY(180deg);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    }
+    .fcTop{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      color: var(--muted); font-size: 12px; font-weight: 800;
+    }
+    .fcQ{ font-weight: 900; font-size: 15px; }
+    .fcA{ color: var(--ink); font-weight: 700; }
+    .fcHint{ color: var(--muted); font-size: 12px; }
+
+    footer{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 18px 18px 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    code.k{
+      background: #f0f6ff;
+      border: 1px solid rgba(91,141,239,.25);
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-weight: 800;
+      color: #2d4f9e;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="title">
+    <div class="badge">DERIVATE • interattivo</div>
+    <div>
+      <h1>Derivate — teoria, esercizi graduati e flashcard</h1>
+      <p class="subtitle">
+        3 schede di teoria • 3 schede di esercizi (≥20 ciascuna, con guida e soluzioni a comparsa) • 1 scheda flashcard.
+      </p>
+      <div class="kpiRow">
+        <div class="pill"><span class="chip"></span><b>Learning by doing</b> • passi guidati e check</div>
+        <div class="pill"><span class="chip" style="background:var(--primary)"></span><b>Feedback immediato</b> • verifica risposta</div>
+        <div class="pill"><span class="chip" style="background:var(--warn)"></span><b>Errori comuni</b> • prevenzione</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="side">
+    <div class="navTitle">
+      <span>Navigazione</span>
+      <button class="btn small" onclick="openFirst()">Home</button>
+    </div>
+    <div class="nav" id="nav">
+      <button class="active" data-target="home">
+        <span class="dot"></span>
+        <div>
+          <b>Home</b>
+          <small>come usare il file</small>
+        </div>
+      </button>
+
+      <button data-target="t1">
+        <span class="dot" style="background:var(--lav)"></span>
+        <div>
+          <b>Teoria 1</b>
+          <small>derivate: definizioni e regole</small>
+        </div>
+      </button>
+
+      <button data-target="t2">
+        <span class="dot" style="background:var(--primary)"></span>
+        <div>
+          <b>Teoria 2</b>
+          <small>teoremi del calcolo differenziale</small>
+        </div>
+      </button>
+
+      <button data-target="t3">
+        <span class="dot" style="background:var(--accent)"></span>
+        <div>
+          <b>Teoria 3</b>
+          <small>studio di funzione</small>
+        </div>
+      </button>
+
+      <button data-target="e1">
+        <span class="dot" style="background:var(--lav)"></span>
+        <div>
+          <b>Esercizi 1</b>
+          <small>derivate (20)</small>
+        </div>
+      </button>
+
+      <button data-target="e2">
+        <span class="dot" style="background:var(--primary)"></span>
+        <div>
+          <b>Esercizi 2</b>
+          <small>teoremi & monotonia (20)</small>
+        </div>
+      </button>
+
+      <button data-target="e3">
+        <span class="dot" style="background:var(--accent)"></span>
+        <div>
+          <b>Esercizi 3</b>
+          <small>studio di funzione (20)</small>
+        </div>
+      </button>
+
+      <button data-target="flash">
+        <span class="dot" style="background:var(--warn)"></span>
+        <div>
+          <b>Flashcard</b>
+          <small>3 moduli + filtri</small>
+        </div>
+      </button>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <b style="display:block; margin-bottom:6px">Suggerimento didattico (50 min)</b>
+      <div style="color:var(--muted); font-size:13px">
+        <ul style="margin:0; padding-left:18px">
+          <li><b>15'</b> teoria (scheda + mini-domande)</li>
+          <li><b>15'</b> esempi guidati (Esercizi 1–6)</li>
+          <li><b>15'</b> esercizi (7–16) a coppie</li>
+          <li><b>5–10'</b> discussione + errori comuni</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- HOME -->
+    <section class="panel active" id="home">
+      <div class="sectionTitle">
+        <h2>Come si usa</h2>
+        <div class="mini">clicca le schede a sinistra • apri/chiudi approfondimenti • verifica risposte</div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <b>Interattività inclusa</b>
+          <ul style="margin:8px 0 0; padding-left:18px; color:var(--muted)">
+            <li><b>Accordion</b> (approfondimenti e errori comuni)</li>
+            <li><b>Esercizi guidati</b> con passi sbloccabili</li>
+            <li><b>Check</b> risposta (feedback immediato)</li>
+            <li><b>Soluzioni a comparsa</b> per gli esercizi non guidati</li>
+            <li><b>Flashcard</b> cliccabili (fronte/retro) con filtro per modulo</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <b>Inclusione (DSA/PDP) — pronta all’uso</b>
+          <ul style="margin:8px 0 0; padding-left:18px; color:var(--muted)">
+            <li>Testo leggibile, spaziatura ampia, colori tenui</li>
+            <li>Passi “uno alla volta” (riduce carico cognitivo)</li>
+            <li>Soluzioni brevi + <b>errori tipici</b> (rinforzo metacognitivo)</li>
+            <li>Puoi stampare: ogni esercizio è autonomo</li>
+          </ul>
+          <div class="callout good" style="margin-top:10px">
+            <b>Trucco pratico:</b> per studenti fragili, assegna solo gli esercizi 1–10; per potenziamento, 15–20.
+          </div>
+        </div>
+      </div>
+
+      <details>
+        <summary>
+          Checklist veloce (prima della verifica)
+          <span class="sumRight">
+            <span class="tag good">autovalutazione</span>
+          </span>
+        </summary>
+        <ol style="margin:10px 0 0; padding-left:18px; color:var(--muted)">
+          <li>So quando usare definizione vs regole?</li>
+          <li>Riconosco funzione composta/prodotto/quoziente?</li>
+          <li>Nel dominio ho escluso i punti “problematici” (radici pari, denominatori, log)?</li>
+          <li>Per crescenza/decrescenza so fare tabella dei segni?</li>
+          <li>So distinguere massimo/minimo/flesso orizzontale?</li>
+        </ol>
+      </details>
+    </section>
+
+    <!-- TEORIA 1 -->
+    <section class="panel" id="t1">
+      <div class="sectionTitle">
+        <h2>Teoria 1 — Derivate: idee, definizioni, regole</h2>
+        <div class="mini">tangente • rapporto incrementale • derivata • regole operative</div>
+      </div>
+
+      <div class="callout">
+        <b>Idea chiave:</b> la derivata $f'(c)$ è la “pendenza istantanea” e coincide con il coefficiente angolare della tangente al grafico in $x=c$.
+      </div>
+
+      <details open>
+        <summary>
+          1) Rapporto incrementale e tangente
+          <span class="sumRight">
+            <span class="tag">fondamenti</span>
+          </span>
+        </summary>
+        <div style="color:var(--muted)">
+          Dati $A(c,f(c))$ e $B(c+h, f(c+h))$, il <b>rapporto incrementale</b> è:
+          $$\frac{\Delta y}{\Delta x}=\frac{f(c+h)-f(c)}{h}.$$
+          È la pendenza della secante $AB$. Quando $h \to 0$, la secante “tende” alla tangente.
+          <div class="callout warn">
+            <b>Errore comune:</b> sostituire $h=0$ direttamente → si ottiene $0/0$.  
+            <b>Come evitarlo:</b> prima semplifica l’espressione, poi fai il limite.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          2) Definizione di derivata in un punto
+          <span class="sumRight">
+            <span class="tag good">da sapere</span>
+          </span>
+        </summary>
+        <div style="color:var(--muted)">
+          La derivata di $f$ in $c$ è:
+          $$f'(c)=\lim_{h\to 0}\frac{f(c+h)-f(c)}{h} \quad (\text{se esiste finito}).$$
+          Se la tangente non è verticale, l’equazione della tangente è:
+          $$y-f(c)=f'(c)\,(x-c).$$
+          <div class="callout bad">
+            <b>Errore comune:</b> confondere $f'(c)$ con $f(c)$.  
+            <b>Promemoria:</b> $f(c)$ è “quota”, $f'(c)$ è “pendenza”.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          3) Derivata destra e sinistra — non derivabilità
+          <span class="sumRight">
+            <span class="tag warn">attenzione</span>
+          </span>
+        </summary>
+        <div style="color:var(--muted)">
+          La funzione è derivabile in $c$ se esistono e coincidono:
+          $$f'_-(c)=\lim_{h\to 0^-}\frac{f(c+h)-f(c)}{h},\qquad
+            f'_+(c)=\lim_{h\to 0^+}\frac{f(c+h)-f(c)}{h}.$$
+          Tipici punti di non derivabilità:
+          <ul>
+            <li><b>punto angoloso</b> (pendenze finite ma diverse)</li>
+            <li><b>cuspide</b> (pendenze infinite con segni opposti)</li>
+            <li><b>tangente verticale</b> (pendenza infinita)</li>
+          </ul>
+        </div>
+      </details>
+
+      <details open>
+        <summary>
+          4) Regole di derivazione (operazioni e composizione)
+          <span class="sumRight">
+            <span class="tag good">procedura</span>
+          </span>
+        </summary>
+        <div style="color:var(--muted)">
+          <ul>
+            <li>$D[k f(x)]=k f'(x)$</li>
+            <li>$D[f+g]=f'+g'$</li>
+            <li>$D[f\cdot g]=f'g+fg'$</li>
+            <li>$D\left[\frac{f}{g}\right]=\frac{f'g-fg'}{g^2}$</li>
+            <li><b>Catena</b>: $D[f(g(x))]=f'(g(x))\cdot g'(x)$</li>
+          </ul>
+
+          <div class="callout warn">
+            <b>Errore comune (catena):</b> derivare “solo fuori” o “solo dentro”.  
+            <b>Strategia:</b> evidenzia $g(x)$ con un colore e riscrivi: “fuori derivata” × “dentro derivata”.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          5) Derivate fondamentali (mini-tabella)
+          <span class="sumRight">
+            <span class="tag">formulario</span>
+          </span>
+        </summary>
+        <div style="color:var(--muted)">
+          Alcune essenziali:
+          <ul>
+            <li>$D[x^n]=n x^{n-1}$ (per $n\in\mathbb{Z}$, con dominio adeguato)</li>
+            <li>$D[e^x]=e^x$, $D[a^x]=a^x\ln a$</li>
+            <li>$D[\ln x]=\frac{1}{x}$ (per $x>0$)</li>
+            <li>$D[\sin x]=\cos x$, $D[\cos x]=-\sin x$</li>
+            <li>$D[\tan x]=\frac{1}{\cos^2 x}$</li>
+          </ul>
+          <div class="callout good">
+            <b>Consiglio:</b> prima “riconosci la forma”, poi scegli la regola (somma/prodotto/quoziente/catena).
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- TEORIA 2 -->
+    <section class="panel" id="t2">
+      <div class="sectionTitle">
+        <h2>Teoria 2 — Teoremi del calcolo differenziale</h2>
+        <div class="mini">Rolle • Lagrange • Cauchy • De L’Hospital • monotonia</div>
+      </div>
+
+      <div class="callout">
+        <b>Idea chiave:</b> i teoremi collegano “andamento globale” (intervallo) e “informazione locale” ($f'(x)$).
+      </div>
+
+      <details open>
+        <summary>
+          1) Continuità e derivabilità
+          <span class="sumRight"><span class="tag warn">concetto</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Se $f$ è derivabile in $x_0$, allora è anche continua in $x_0$.  
+          <div class="callout bad">
+            <b>Attenzione:</b> il contrario NON vale (una funzione può essere continua ma non derivabile).
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          2) Teorema di Rolle
+          <span class="sumRight"><span class="tag good">da applicare</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Ipotesi: $f$ continua in $[a,b]$, derivabile in $(a,b)$, e $f(a)=f(b)$.  
+          Tesi: $\exists c\in(a,b)$ tale che $f'(c)=0$.  
+          <div class="callout warn">
+            <b>Errore comune:</b> dimenticare che serve <b>derivabile in tutto</b> $(a,b)$ (no cuspidi/punti angolosi).
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          3) Teorema di Lagrange (valore medio)
+          <span class="sumRight"><span class="tag good">chiave</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Ipotesi: $f$ continua in $[a,b]$ e derivabile in $(a,b)$.  
+          Tesi: $\exists c$ con
+          $$f'(c)=\frac{f(b)-f(a)}{b-a}.$$
+          Interpretazione: esiste una tangente parallela alla secante $AB$.
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          4) Teorema di Cauchy
+          <span class="sumRight"><span class="tag">estensione</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Con $f,g$ continue in $[a,b]$, derivabili in $(a,b)$ e $g'(x)\neq 0$:
+          $$\exists c:\ \frac{f'(c)}{g'(c)}=\frac{f(b)-f(a)}{g(b)-g(a)}.$$
+          Utile per dimostrazioni e come base di De L’Hospital.
+        </div>
+      </details>
+
+      <details open>
+        <summary>
+          5) De L’Hospital (forme 0/0 e ∞/∞)
+          <span class="sumRight"><span class="tag warn">attenzione</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Se $\lim f=\lim g=0$ (oppure $\pm\infty$) e valgono ipotesi di derivabilità con $g'\neq 0$, allora:
+          $$\lim \frac{f(x)}{g(x)}=\lim \frac{f'(x)}{g'(x)} \quad \text{(se il limite a destra esiste)}.$$
+          <div class="callout bad">
+            <b>Errore comune:</b> applicarlo “a memoria” senza verificare la forma indeterminata.  
+            <b>Checklist:</b> (1) forma 0/0 o ∞/∞; (2) derivabilità; (3) $g'\neq 0$ nell’intorno; (4) limite del rapporto delle derivate.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          6) Derivata e monotonia
+          <span class="sumRight"><span class="tag good">operativo</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Se $f'(x)>0$ in un intervallo → $f$ crescente; se $f'(x)<0$ → decrescente.  
+          Operativamente: studi il segno di $f'(x)$ con tabella dei segni.
+          <div class="callout warn">
+            <b>Errore comune:</b> scordare i punti dove $f'$ non esiste (anche quelli vanno considerati nella tabella!).
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- TEORIA 3 -->
+    <section class="panel" id="t3">
+      <div class="sectionTitle">
+        <h2>Teoria 3 — Studio di funzione (schema completo)</h2>
+        <div class="mini">dominio • zeri • segno • limiti • asintoti • monotonia • concavità • grafico</div>
+      </div>
+
+      <div class="callout">
+        <b>Obiettivo:</b> trasformare una funzione in un “racconto” fatto di vincoli (dominio), tendenze (limiti), e variazioni (derivate).
+      </div>
+
+      <details open>
+        <summary>
+          1) Schema in 7 passi (pronto per verifiche)
+          <span class="sumRight"><span class="tag good">procedura</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          <ol style="margin:10px 0 0; padding-left:18px">
+            <li><b>Dominio</b> (denominatori, radici pari, logaritmi…)</li>
+            <li><b>Simmetrie</b> (pari/dispari) se il dominio lo permette</li>
+            <li><b>Intersezioni</b> con assi ($x=0$, $y=0$)</li>
+            <li><b>Segno</b> ($f(x)\ge 0$ / $f(x)\le 0$)</li>
+            <li><b>Limiti & asintoti</b> (verticali/orizzontali/obliqui)</li>
+            <li><b>Derivata prima</b> (cresc/decresc, estremi, flesso orizz.)</li>
+            <li><b>Derivata seconda</b> (concavità, flessi)</li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          2) Massimi/minimi: necessari vs sufficienti
+          <span class="sumRight"><span class="tag warn">errori tipici</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          <b>Fermat:</b> se $f$ ha estremo relativo in $x_0$ (interno) ed è derivabile, allora $f'(x_0)=0$ (condizione <b>necessaria</b>).  
+          Ma $f'(x_0)=0$ non garantisce estremo (es. flesso orizzontale).
+          <div class="callout warn">
+            <b>Come decidere:</b> usa il <b>segno di $f'$</b> (cambia da + a − → max; da − a + → min).
+          </div>
+        </div>
+      </details>
+
+      <details open>
+        <summary>
+          3) Concavità e flessi
+          <span class="sumRight"><span class="tag good">chiave</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Se $f''(x)>0$ → concavità verso l’alto; se $f''(x)<0$ → verso il basso.  
+          Un flesso richiede tipicamente cambio di segno di $f''$ (condizione “forte” operativa).
+          <div class="callout bad">
+            <b>Errore comune:</b> credere che $f''(x_0)=0$ implichi flesso.  
+            <b>Correzione:</b> è solo condizione necessaria: serve il cambio di concavità.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          4) Micro-strategia “antipanico” (per grafico finale)
+          <span class="sumRight"><span class="tag">metodo</span></span>
+        </summary>
+        <div style="color:var(--muted)">
+          Prima disegna “a matita” solo:
+          <ul>
+            <li>dominio e asintoti</li>
+            <li>punti notevoli (intersezioni, estremi, flessi)</li>
+            <li>frecce di crescita/decrescita e concavità</li>
+          </ul>
+          Poi unisci i pezzi in modo coerente.
+        </div>
+      </details>
+    </section>
+
+    <!-- ESERCIZI 1/2/3 + FLASH in PARTI successive -->
+    <section class="panel" id="e1"></section>
+    <section class="panel" id="e2"></section>
+    <section class="panel" id="e3"></section>
+    <section class="panel" id="flash"></section>
+
+  </main>
+</div>
+
+<footer>
+  <b>Nota:</b> nei campi di risposta accetta forme equivalenti (spazi ignorati). Se vuoi rendere i controlli più “severi”, dimmelo e li adatto.
+</footer>
+
+<script>
+  // Tabs
+  const nav = document.getElementById('nav');
+  const buttons = [...nav.querySelectorAll('button[data-target]')];
+  const panels  = [...document.querySelectorAll('.panel')];
+
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      buttons.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.target;
+      panels.forEach(p=>p.classList.toggle('active', p.id===id));
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  function openFirst(){
+    const homeBtn = buttons.find(b=>b.dataset.target==='home');
+    homeBtn?.click();
+  }
+
+  // Utility: normalize math string for checks
+  function norm(s){
+    return (s||'')
+      .toLowerCase()
+      .replace(/\s+/g,'')
+      .replace(/\\,/g,'')
+      .replace(/·/g,'*')
+      .replace(/−/g,'-');
+  }
+
+  // Check answer: regex list OR exact list (normalized)
+  function checkAnswer(inputId, fbId, accept){
+    const v = norm(document.getElementById(inputId).value);
+    const fb = document.getElementById(fbId);
+
+    let ok = false;
+    for(const a of accept){
+      if(a.type==='exact'){
+        ok = ok || a.values.includes(v);
+      }else if(a.type==='regex'){
+        ok = ok || new RegExp(a.value).test(v);
+      }
+    }
+
+    fb.className = 'feedback ' + (ok ? 'ok':'no');
+    fb.textContent = ok ? '✅ Corretta' : '❌ Riprova (controlla regola/dominio)';
+    return ok;
+  }
+
+  // Toggle steps inside guided exercises
+  function toggleSteps(id){
+    const el = document.getElementById(id);
+    el.style.display = (el.style.display==='block') ? 'none' : 'block';
+    MathJax.typesetPromise?.();
+  }
+
+  // Reveal a specific step
+  function reveal(id){
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    MathJax.typesetPromise?.();
+  }
+
+  // Flashcards flip
+  function flipCard(cardEl){
+    cardEl.classList.toggle('flipped');
+  }
+
+  // Flashcards filter
+  function filterFlashcards(){
+    const mod = document.getElementById('fcModule').value;
+    const cards = [...document.querySelectorAll('.flashcard')];
+    cards.forEach(c=>{
+      const m = c.getAttribute('data-module');
+      c.style.display = (mod==='all' || m===mod) ? 'block' : 'none';
+    });
+  }
+</script>
+<script>
+  // =========================
+  // ESERCIZI 1 — DERIVATE (20)
+  // =========================
+  document.getElementById('e1').innerHTML = `
+    <div class="sectionTitle">
+      <h2>Esercizi 1 — Derivate (20, difficoltà crescente)</h2>
+      <div class="mini">1–6 guidati • 7–20 con svolgimento a comparsa</div>
+    </div>
+
+    <div class="callout good">
+      <b>Metodo lampo (prima di derivare):</b>
+      <span>1) riconosci la struttura (somma/prodotto/quoziente/composta)</span> •
+      <span>2) scrivi il dominio se necessario</span> •
+      <span>3) applica la regola e semplifica</span>.
+    </div>
+
+    <!-- GUIDATI 1-6 -->
+    ${guided1()}
+    ${guided2()}
+    ${guided3()}
+    ${guided4()}
+    ${guided5()}
+    ${guided6()}
+
+    <details open>
+      <summary>
+        Errori comuni del modulo (clicca)
+        <span class="sumRight"><span class="tag warn">da evitare</span></span>
+      </summary>
+      <div style="color:var(--muted)">
+        <ul>
+          <li><b>Catena dimenticata:</b> $D[(g(x))^n]=n(g(x))^{n-1}g'(x)$.</li>
+          <li><b>Quoziente invertito:</b> il numeratore è <code class="k">f'g - fg'</code>, non il contrario.</li>
+          <li><b>Dominio ignorato:</b> log, radici pari e denominatori impongono vincoli.</li>
+          <li><b>Semplificare troppo presto:</b> prima deriva correttamente, poi semplifica.</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- NON GUIDATI 7-20 -->
+    ${revealEx(7,'Deriva $f(x)=3x^5-2x^3+x-7$.',
+      '$f\'(x)=15x^4-6x^2+1$',
+      'Derivate fondamentali + linearità.'
+    )}
+
+    ${revealEx(8,'Deriva $f(x)=\\sqrt{x}=x^{1/2}$ (dominio?).',
+      'Dominio: $x\\ge 0$. $f\'(x)=\\frac{1}{2\\sqrt{x}}$ (per $x>0$).',
+      'Ricorda: la derivata esiste per $x>0$; in $0$ va discussa.'
+    )}
+
+    ${revealEx(9,'Deriva $f(x)=\\frac{1}{x^2}$.',
+      '$f\'(x)=-\\frac{2}{x^3}$.',
+      'Scrivi come $x^{-2}$ oppure usa quoziente.'
+    )}
+
+    ${revealEx(10,'Deriva $f(x)=\\ln(x^2)$.',
+      'Dominio: $x\\neq 0$. $f\'(x)=\\frac{2}{x}$.',
+      'Catena: $D[\\ln u]=u\'/u$ con $u=x^2$.'
+    )}
+
+    ${revealEx(11,'Deriva $f(x)=e^{3x-1}$.',
+      '$f\'(x)=3e^{3x-1}$.',
+      'Catena: fuori $e^u$, dentro $u\'=3$.'
+    )}
+
+    ${revealEx(12,'Deriva $f(x)=\\sin(2x)$.',
+      '$f\'(x)=2\\cos(2x)$.',
+      'Catena.'
+    )}
+
+    ${revealEx(13,'Deriva $f(x)=x\\cos x$.',
+      '$f\'(x)=\\cos x - x\\sin x$.',
+      'Prodotto: $(x)\'\\cos x + x(\\cos x)\'$.'
+    )}
+
+    ${revealEx(14,'Deriva $f(x)=\\frac{x^2+1}{x-1}$.',
+      '$f\'(x)=\\frac{(2x)(x-1)-(x^2+1)\\cdot 1}{(x-1)^2}=\\frac{x^2-2x-1}{(x-1)^2}$.',
+      'Quoziente + semplificazione.'
+    )}
+
+    ${revealEx(15,'Deriva $f(x)=\\tan x$.',
+      '$f\'(x)=\\frac{1}{\\cos^2 x}$.',
+      'Formula nota.'
+    )}
+
+    ${revealEx(16,'Deriva $f(x)=\\ln(\\sqrt{x})$.',
+      'Dominio: $x>0$. $f\'(x)=\\frac{1}{2x}$.',
+      'Usa $\\ln(\\sqrt{x})=\\frac12\\ln x$.'
+    )}
+
+    ${revealEx(17,'Deriva $f(x)=\\sqrt{1-x^2}$.',
+      '$f\'(x)=\\frac{-x}{\\sqrt{1-x^2}}$.',
+      'Catena: $(1-x^2)^{1/2}$.'
+    )}
+
+    ${revealEx(18,'Deriva $f(x)=(2x^3-3x^2+x-1)^4$.',
+      '$f\'(x)=4(2x^3-3x^2+x-1)^3\\,(6x^2-6x+1)$.',
+      'Catena: fuori potenza, dentro polinomio.'
+    )}
+
+    ${revealEx(19,'Deriva $f(x)=\\frac{e^x}{x}$.',
+      '$f\'(x)=\\frac{e^x\\cdot x - e^x\\cdot 1}{x^2}=\\frac{e^x(x-1)}{x^2}$.',
+      'Quoziente (o prodotto con $x^{-1}$).'
+    )}
+
+    ${revealEx(20,'Deriva $f(x)=\\arcsin x$.',
+      '$f\'(x)=\\frac{1}{\\sqrt{1-x^2}}$ (per $|x|<1$).',
+      'Formula fondamentale (attenzione al dominio).'
+    )}
+  `;
+
+  function revealEx(n, text, sol, hint){
+    return `
+      <div class="ex">
+        <div class="exHead">
+          <div class="exNum">#${n}</div>
+          <div class="exMeta">
+            <span class="tag">standard</span>
+            <span class="tag">difficoltà ↑</span>
+          </div>
+        </div>
+        <div class="exBody">
+          <div><b>Testo.</b> ${text}</div>
+          <details style="margin-top:10px">
+            <summary>Mostra svolgimento / risultato <span class="sumRight"><span class="tag good">soluzione</span></span></summary>
+            <div style="color:var(--muted); margin-top:8px">
+              <div><b>Risposta:</b> ${sol}</div>
+              <div class="callout" style="margin-top:10px"><b>Idea:</b> ${hint}</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    `;
+  }
+
+  // --------------------------
+  // GUIDATI (1-6)
+  // --------------------------
+  function guidedShell(n, stepsHtml, promptHtml, metaTags, bodyHtml, stepsId){
+  return `
+    <div class="ex">
+      <div class="exHead">
+        <div class="exNum">#${n} • guidato</div>
+        <div class="exMeta">
+          ${metaTags}
+        </div>
+      </div>
+      <div class="exBody">
+        ${bodyHtml}
+        <div class="callout" style="margin-top:10px">
+          ${promptHtml}
+        </div>
+
+        <div class="btnRow">
+          <button class="btn primary" onclick="toggleSteps('${stepsId}')">Apri/chiudi guida</button>
+        </div>
+
+        <div class="steps" id="${stepsId}">
+          <div class="callout good"><b>Regola:</b> sblocca i passi uno alla volta e controlla i calcoli.</div>
+          ${stepsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+  function guided1(){
+    const stepsId='g1_steps';
+    return guidedShell(
+      1,
+      `
+      <div class="step" id="g1_s1" style="display:block">
+        <b>Passo 1 (definizione):</b> scrivi il rapporto incrementale per $f(x)=x^2$ in $c$.
+        $$\\frac{f(c+h)-f(c)}{h}=\\frac{(c+h)^2-c^2}{h}$$
+        <button class="btn small" onclick="reveal('g1_s2')">Mostra passo 2</button>
+      </div>
+      <div class="step" id="g1_s2" style="display:none">
+        <b>Passo 2 (sviluppa):</b> $(c+h)^2=c^2+2ch+h^2$.
+        $$\\frac{c^2+2ch+h^2-c^2}{h}=\\frac{2ch+h^2}{h}=2c+h$$
+        <button class="btn small" onclick="reveal('g1_s3')">Mostra passo 3</button>
+      </div>
+      <div class="step" id="g1_s3" style="display:none">
+        <b>Passo 3 (limite):</b>
+        $$f'(c)=\\lim_{h\\to 0}(2c+h)=2c.$$
+        <div class="checkline">
+          <input id="g1_in" type="text" placeholder="Scrivi f'(x) = ..." />
+          <button class="btn small" onclick="checkAnswer('g1_in','g1_fb',[
+            {type:'exact', values:[norm('2x'), norm('2*x')]}
+          ])">Verifica</button>
+          <span id="g1_fb" class="feedback">—</span>
+        </div>
+        <div class="callout warn">
+          <b>Errore comune:</b> dimenticare di dividere ogni termine per $h$ prima del limite.
+        </div>
+      </div>
+      `,
+      `<b>Deriva con definizione:</b> $f(x)=x^2$ (trova $f'(x)$).`,
+      `<span class="tag good">base</span><span class="tag">definizione</span>`,
+      `<div><b>Testo.</b> Usa la definizione di derivata per calcolare $f'(x)$.</div>`,
+      stepsId
+    );
+  }
+
+  function guided2(){
+    const stepsId='g2_steps';
+    return guidedShell(
+      2,
+      `
+      <div class="step" id="g2_s1" style="display:block">
+        <b>Passo 1 (riconoscimento):</b> $f(x)=\\dfrac{x^2-2}{x+1}$ è un <b>quoziente</b>.
+        <div class="callout">Usa: $\\left(\\frac{f}{g}\\right)'=\\frac{f'g-fg'}{g^2}$</div>
+        <button class="btn small" onclick="reveal('g2_s2')">Mostra passo 2</button>
+      </div>
+      <div class="step" id="g2_s2" style="display:none">
+        <b>Passo 2:</b> $u=x^2-2 \\Rightarrow u'=2x$; $v=x+1\\Rightarrow v'=1$.
+        $$f'(x)=\\frac{2x(x+1)-(x^2-2)\\cdot 1}{(x+1)^2}$$
+        <button class="btn small" onclick="reveal('g2_s3')">Mostra passo 3</button>
+      </div>
+      <div class="step" id="g2_s3" style="display:none">
+        <b>Passo 3 (semplifica):</b>
+        $$f'(x)=\\frac{2x^2+2x-x^2+2}{(x+1)^2}=\\frac{x^2+2x+2}{(x+1)^2}.$$
+        <div class="checkline">
+          <input id="g2_in" type="text" placeholder="Scrivi f'(x) = ..." />
+          <button class="btn small" onclick="checkAnswer('g2_in','g2_fb',[
+            {type:'regex', value:'^\\\\frac\\{x\\^2\\+2x\\+2\\}\\{\\(x\\+1\\)\\^2\\}$'},
+            {type:'exact', values:[norm('(x^2+2x+2)/(x+1)^2')]}
+          ])">Verifica</button>
+          <span id="g2_fb" class="feedback">—</span>
+        </div>
+        <div class="callout warn">
+          <b>Errore comune:</b> scrivere $u'g-ug'$ al posto di $u'v-uv'$ (ordine importante).
+        </div>
+      </div>
+      `,
+      `<b>Deriva:</b> $f(x)=\\dfrac{x^2-2}{x+1}$.`,
+      `<span class="tag good">base</span><span class="tag">quoziente</span>`,
+      `<div><b>Testo.</b> Calcola $f'(x)$ e semplifica il risultato.</div>`,
+      stepsId
+    );
+  }
+
+  function guided3(){
+    const stepsId='g3_steps';
+    return guidedShell(
+      3,
+      `
+      <div class="step" id="g3_s1" style="display:block">
+        <b>Passo 1:</b> $f(x)=\\sin(3x)$ è una <b>composta</b> $\\sin(u)$ con $u=3x$.
+        <button class="btn small" onclick="reveal('g3_s2')">Mostra passo 2</button>
+      </div>
+      <div class="step" id="g3_s2" style="display:none">
+        <b>Passo 2 (catena):</b> $(\\sin u)'=\\cos u\\cdot u'$ e $u'=3$.
+        $$f'(x)=\\cos(3x)\\cdot 3=3\\cos(3x).$$
+        <div class="checkline">
+          <input id="g3_in" type="text" placeholder="Scrivi f'(x) = ..." />
+          <button class="btn small" onclick="checkAnswer('g3_in','g3_fb',[
+            {type:'exact', values:[norm('3cos(3x)'), norm('3*cos(3x)')]}
+          ])">Verifica</button>
+          <span id="g3_fb" class="feedback">—</span>
+        </div>
+        <div class="callout warn"><b>Errore comune:</b> dimenticare il fattore $3$.</div>
+      </div>
+      `,
+      `<b>Deriva:</b> $f(x)=\\sin(3x)$.`,
+      `<span class="tag good">base</span><span class="tag">catena</span>`,
+      `<div><b>Testo.</b> Applica la regola della catena.</div>`,
+      stepsId
+    );
+  }
+
+  function guided4(){
+    const stepsId='g4_steps';
+    return guidedShell(
+      4,
+      `
+      <div class="step" id="g4_s1" style="display:block">
+        <b>Passo 1:</b> $f(x)=x^2 e^x$ è un <b>prodotto</b>: $u=x^2$, $v=e^x$.
+        <button class="btn small" onclick="reveal('g4_s2')">Mostra passo 2</button>
+      </div>
+      <div class="step" id="g4_s2" style="display:none">
+        <b>Passo 2:</b> $u'=2x$, $v'=e^x$.
+        $$f'(x)=u'v+uv'=2x e^x + x^2 e^x.$$
+        <button class="btn small" onclick="reveal('g4_s3')">Mostra passo 3</button>
+      </div>
+      <div class="step" id="g4_s3" style="display:none">
+        <b>Passo 3 (raccogli):</b>
+        $$f'(x)=e^x(2x+x^2)=x e^x(x+2).$$
+        <div class="checkline">
+          <input id="g4_in" type="text" placeholder="Scrivi una forma equivalente..." />
+          <button class="btn small" onclick="checkAnswer('g4_in','g4_fb',[
+            {type:'exact', values:[norm('e^x(2x+x^2)'), norm('e^x(x^2+2x)'), norm('x e^x(x+2)')]}
+          ])">Verifica</button>
+          <span id="g4_fb" class="feedback">—</span>
+        </div>
+        <div class="callout warn"><b>Errore comune:</b> fare $D[x^2 e^x]=D[x^2]D[e^x]$ (NO!).</div>
+      </div>
+      `,
+      `<b>Deriva:</b> $f(x)=x^2 e^x$ e semplifica.`,
+      `<span class="tag good">base</span><span class="tag">prodotto</span>`,
+      `<div><b>Testo.</b> Applica la regola del prodotto e raccogli un fattore comune.</div>`,
+      stepsId
+    );
+  }
+
+  function guided5(){
+    const stepsId='g5_steps';
+    return guidedShell(
+      5,
+      `
+      <div class="step" id="g5_s1" style="display:block">
+        <b>Passo 1:</b> $f(x)=\\ln(2x-1)$ è composta: $\\ln(u)$ con $u=2x-1$.
+        <button class="btn small" onclick="reveal('g5_s2')">Mostra passo 2</button>
+      </div>
+      <div class="step" id="g5_s2" style="display:none">
+        <b>Passo 2 (dominio):</b> serve $2x-1>0 \\Rightarrow x>\\frac12$.
+        <button class="btn small" onclick="reveal('g5_s3')">Mostra passo 3</button>
+      </div>
+      <div class="step" id="g5_s3" style="display:none">
+        <b>Passo 3 (derivata):</b> $D[\\ln u]=u'/u$, $u'=2$:
+        $$f'(x)=\\frac{2}{2x-1}.$$
+        <div class="checkline">
+          <input id="g5_in" type="text" placeholder="Scrivi f'(x) = ..." />
+          <button class="btn small" onclick="checkAnswer('g5_in','g5_fb',[
+            {type:'exact', values:[norm('2/(2x-1)')]}
+          ])">Verifica</button>
+          <span id="g5_fb" class="feedback">—</span>
+        </div>
+        <div class="callout warn"><b>Errore comune:</b> dimenticare il dominio del log.</div>
+      </div>
+      `,
+      `<b>Deriva:</b> $f(x)=\\ln(2x-1)$ (includi il dominio).`,
+      `<span class="tag good">base</span><span class="tag warn">dominio</span><span class="tag">catena</span>`,
+      `<div><b>Testo.</b> Determina dominio e calcola $f'(x)$.</div>`,
+      stepsId
+    );
+  }
+
+  function guided6(){
+    const stepsId='g6_steps';
+    return guidedShell(
+      6,
+      `
+      <div class="step" id="g6_s1" style="display:block">
+        <b>Passo 1:</b> $f(x)=\\sqrt{1-x}= (1-x)^{1/2}$ (composta).
+        <button class="btn small" onclick="reveal('g6_s2')">Mostra passo 2</button>
+      </div>
+      <div class="step" id="g6_s2" style="display:none">
+        <b>Passo 2 (dominio):</b> $1-x\\ge 0 \\Rightarrow x\\le 1$.
+        <button class="btn small" onclick="reveal('g6_s3')">Mostra passo 3</button>
+      </div>
+      <div class="step" id="g6_s3" style="display:none">
+        <b>Passo 3 (catena):</b>
+        $$f'(x)=\\frac12(1-x)^{-1/2}\\cdot(-1)= -\\frac{1}{2\\sqrt{1-x}}.$$
+        <div class="checkline">
+          <input id="g6_in" type="text" placeholder="Scrivi f'(x) = ..." />
+          <button class="btn small" onclick="checkAnswer('g6_in','g6_fb',[
+            {type:'exact', values:[norm('-1/(2sqrt(1-x))')]}
+          ])">Verifica</button>
+          <span id="g6_fb" class="feedback">—</span>
+        </div>
+        <div class="callout warn"><b>Errore comune:</b> perdere il segno “−” (derivata di $1-x$).</div>
+      </div>
+      `,
+      `<b>Deriva:</b> $f(x)=\\sqrt{1-x}$ (dominio + derivata).`,
+      `<span class="tag good">base</span><span class="tag warn">dominio</span><span class="tag">catena</span>`,
+      `<div><b>Testo.</b> Riscrivi come potenza e applica la catena.</div>`,
+      stepsId
+    );
+  }
+</script>
+<script>
+  // ==========================================
+  // ESERCIZI 2 — TEOREMI / MONOTONIA / HOSPITAL
+  // ==========================================
+  document.getElementById('e2').innerHTML = `
+    <div class="sectionTitle">
+      <h2>Esercizi 2 — Teoremi del calcolo differenziale (20)</h2>
+      <div class="mini">1–6 guidati • 7–20 con soluzioni a comparsa</div>
+    </div>
+
+    <div class="callout">
+      <b>Checklist applicazione teoremi:</b>
+      <span class="tag">intervallo chiuso</span>
+      <span class="tag">continua</span>
+      <span class="tag">derivabile</span>
+      <span class="tag warn">$g'(x)\\neq 0$</span>
+      <span class="tag good">forma 0/0 o ∞/∞</span>
+    </div>
+
+    ${g2_1()}
+    ${g2_2()}
+    ${g2_3()}
+    ${g2_4()}
+    ${g2_5()}
+    ${g2_6()}
+
+    <details open>
+      <summary>
+        Errori comuni del modulo (clicca)
+        <span class="sumRight"><span class="tag warn">da evitare</span></span>
+      </summary>
+      <div style="color:var(--muted)">
+        <ul>
+          <li><b>Rolle senza derivabilità</b> in tutto $(a,b)$ → teorema non applicabile.</li>
+          <li><b>Lagrange:</b> scordare che serve continuità su $[a,b]$ (non solo in $(a,b)$).</li>
+          <li><b>Monotonia:</b> fare tabella segni senza includere punti dove $f'$ non esiste.</li>
+          <li><b>De L’Hospital:</b> usarlo quando la forma non è 0/0 o ∞/∞ (prima trasformare!).</li>
+        </ul>
+      </div>
+    </details>
+
+    ${ex2(7,'Verifica le ipotesi per Rolle su $f(x)=|x|$ in $[-1,1]$. Applica?','Non applicabile: $|x|$ non è derivabile in $0$.','Controlla derivabilità in $(a,b)$.')}
+    ${ex2(8,'Trova un $c$ (o mostra che esiste) per $f(x)=x^2$ su $[1,3]$ (Lagrange).','Esiste $c$ con $f\'(c)=\\frac{9-1}{2}=4 \\Rightarrow 2c=4 \\Rightarrow c=2$.','Calcola pendenza secante, poi uguaglia a $f\'(c)$.')}
+    ${ex2(9,'Studia crescenza/decrescenza di $f(x)=x^3-3x$.','f\'(x)=3x^2-3=3(x-1)(x+1). Crescente per $x<-1$ e $x>1$, decrescente per $-1<x<1$.','Tabella segni di $f\'$.')}
+    ${ex2(10,'Determina intervalli di monotonia di $f(x)=\\frac{1}{x}$.','f\'(x)=-\\frac{1}{x^2}<0$ per $x\\neq 0$: decrescente su $(-\\infty,0)$ e $(0,\\infty)$.','Ricorda il dominio spezzato.')}
+    ${ex2(11,'Calcola $\\lim_{x\\to 0}\\frac{\\sin x}{x}$. (Senza H.)','Limite notevole: $1$.','È un classico: utile come “base” per altri limiti.')}
+    ${ex2(12,'Calcola $\\lim_{x\\to 0}\\frac{e^x-1}{x}$.','È 1 (derivata di $e^x$ in 0).','Si può anche con sviluppo/limiti notevoli.')}
+    ${ex2(13,'Calcola $\\lim_{x\\to 0}\\frac{\\ln(1+x)}{x}$.','È 1.','Limite notevole.')}
+    ${ex2(14,'Calcola $\\lim_{x\\to 0}\\frac{1-\\cos x}{x^2}$.','È $\\frac12$.','Usa identità $1-\\cos x=2\\sin^2(x/2)$.')}
+    ${ex2(15,'Calcola $\\lim_{x\\to +\\infty}\\frac{3x+\\ln x}{2x+1}$ (puoi usare H.).','Forma ∞/∞ → H: $\\lim \\frac{3+1/x}{2}=\\frac32$.','Deriva sopra e sotto.')}
+    ${ex2(16,'Calcola $\\lim_{x\\to 0^+} x\\ln x$ (H.).','Scrivi $x\\ln x=\\frac{\\ln x}{1/x}$ (∞/∞) → H: $\\frac{1/x}{-1/x^2}=-x\\to 0$.','Trasforma in quoziente.')}
+    ${ex2(17,'Mostra che se $f\'(x)=0$ in $(a,b)$ allora $f$ è costante in $[a,b]$.','Vero: corollario di Lagrange.','Applica Lagrange a due punti qualsiasi.')}
+    ${ex2(18,'Per $f(x)=\\sqrt{x}$ su $[1,4]$, trova $c$ di Lagrange.','Pend. secante: $(2-1)/3=1/3$. $f\'(x)=\\frac{1}{2\\sqrt{x}}=1/3 \\Rightarrow \\sqrt{x}=3/2 \\Rightarrow x=9/4$.','Controlla dominio e derivata.')}
+    ${ex2(19,'Studia monotonia di $f(x)=\\ln x - x$ su $(0,\\infty)$.','f\'(x)=1/x-1=(1-x)/x$. Crescente per $0<x<1$, decrescente per $x>1$.','Tabella segni considerando $x>0$.')}
+    ${ex2(20,'Calcola $\\lim_{x\\to 0}\\frac{\\tan x - x}{x^3}$.','Usando serie/limiti notevoli: $\\frac{1}{3}$.','Esercizio avanzato (se serve lo trasformo in versione guidata).')}
+  `;
+
+  function ex2(n, text, sol, hint){
+    return `
+      <div class="ex">
+        <div class="exHead">
+          <div class="exNum">#${n}</div>
+          <div class="exMeta"><span class="tag">standard</span><span class="tag">difficoltà ↑</span></div>
+        </div>
+        <div class="exBody">
+          <div><b>Testo.</b> ${text}</div>
+          <details style="margin-top:10px">
+            <summary>Mostra soluzione <span class="sumRight"><span class="tag good">soluzione</span></span></summary>
+            <div style="color:var(--muted); margin-top:8px">
+              <div><b>Risposta:</b> ${sol}</div>
+              <div class="callout" style="margin-top:10px"><b>Idea:</b> ${hint}</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    `;
+  }
+
+  // GUIDATI 1-6
+  function g2_shell(n, body, stepsId){
+    return `
+      <div class="ex">
+        <div class="exHead">
+          <div class="exNum">#${n} • guidato</div>
+          <div class="exMeta"><span class="tag good">procedura</span><span class="tag warn">ipotesi</span></div>
+        </div>
+        <div class="exBody">
+          ${body}
+          <div class="btnRow">
+            <button class="btn primary" onclick="toggleSteps('${stepsId}')">Apri/chiudi guida</button>
+          </div>
+          <div class="steps" id="${stepsId}"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function g2_1(){
+    const stepsId='m2g1';
+    const html = g2_shell(1,
+      `<div><b>Testo.</b> Applica Rolle a $f(x)=x^2-1$ in $[-1,1]$ e trova un possibile $c$.</div>`,
+      stepsId
+    );
+    setTimeout(()=>{
+      document.getElementById(stepsId).innerHTML = `
+        <div class="step" style="display:block">
+          <b>Passo 1 (ipotesi):</b> polinomio → continua e derivabile ovunque. Inoltre $f(-1)=0=f(1)$.
+          <button class="btn small" onclick="reveal('m2g1_s2')">Mostra passo 2</button>
+        </div>
+        <div class="step" id="m2g1_s2" style="display:none">
+          <b>Passo 2 (tesi):</b> esiste $c$ con $f'(c)=0$.  
+          $f'(x)=2x \\Rightarrow 2c=0 \\Rightarrow c=0$.
+          <div class="checkline">
+            <input id="m2g1_in" type="text" placeholder="Scrivi c = ..." />
+            <button class="btn small" onclick="checkAnswer('m2g1_in','m2g1_fb',[
+              {type:'exact', values:[norm('0')]}
+            ])">Verifica</button>
+            <span id="m2g1_fb" class="feedback">—</span>
+          </div>
+          <div class="callout good"><b>Conclusione:</b> $c=0$ è un punto con tangente orizzontale.</div>
+        </div>
+      `;
+      MathJax.typesetPromise?.();
+    },0);
+    return html;
+  }
+
+  function g2_2(){
+    const stepsId='m2g2';
+    const html = g2_shell(2,
+      `<div><b>Testo.</b> Usa Lagrange per $f(x)=x^2$ in $[0,2]$ e trova $c$.</div>`,
+      stepsId
+    );
+    setTimeout(()=>{
+      document.getElementById(stepsId).innerHTML = `
+        <div class="step" style="display:block">
+          <b>Passo 1:</b> pendenza secante:
+          $$\\frac{f(2)-f(0)}{2-0}=\\frac{4-0}{2}=2.$$
+          <button class="btn small" onclick="reveal('m2g2_s2')">Mostra passo 2</button>
+        </div>
+        <div class="step" id="m2g2_s2" style="display:none">
+          <b>Passo 2:</b> $f'(x)=2x$. Impongo $2c=2 \\Rightarrow c=1$.
+          <div class="checkline">
+            <input id="m2g2_in" type="text" placeholder="Scrivi c = ..." />
+            <button class="btn small" onclick="checkAnswer('m2g2_in','m2g2_fb',[
+              {type:'exact', values:[norm('1')]}
+            ])">Verifica</button>
+            <span id="m2g2_fb" class="feedback">—</span>
+          </div>
+        </div>
+      `;
+      MathJax.typesetPromise?.();
+    },0);
+    return html;
+  }
+
+  function g2_3(){
+    const stepsId='m2g3';
+    const html = g2_shell(3,
+      `<div><b>Testo.</b> Studia la monotonia di $f(x)=x^3$. (Suggerimento: usa $f'$.)</div>`,
+      stepsId
+    );
+    setTimeout(()=>{
+      document.getElementById(stepsId).innerHTML = `
+        <div class="step" style="display:block">
+          <b>Passo 1:</b> $f'(x)=3x^2$.
+          <button class="btn small" onclick="reveal('m2g3_s2')">Mostra passo 2</button>
+        </div>
+        <div class="step" id="m2g3_s2" style="display:none">
+          <b>Passo 2:</b> $3x^2\\ge 0$ per ogni $x$ e vale $>0$ per $x\\neq 0$.  
+          Quindi $f$ è crescente su $\\mathbb{R}$.
+          <div class="checkline">
+            <input id="m2g3_in" type="text" placeholder="Scrivi: crescente dove?" />
+            <button class="btn small" onclick="checkAnswer('m2g3_in','m2g3_fb',[
+              {type:'regex', value:'(tutto|r|reali|\\br\\b|\\bmathbb\\{r\\}\\b)'}
+            ])">Verifica</button>
+            <span id="m2g3_fb" class="feedback">—</span>
+          </div>
+        </div>
+      `;
+      MathJax.typesetPromise?.();
+    },0);
+    return html;
+  }
+
+  function g2_4(){
+    const stepsId='m2g4';
+    const html = g2_shell(4,
+      `<div><b>Testo.</b> Calcola $\\lim_{x\\to +\\infty}\\frac{5x-1}{2x+3}$ con De L’Hospital.</div>`,
+      stepsId
+    );
+    setTimeout(()=>{
+      document.getElementById(stepsId).innerHTML = `
+        <div class="step" style="display:block">
+          <b>Passo 1:</b> forma $\\infty/\\infty$, applicabile.
+          <button class="btn small" onclick="reveal('m2g4_s2')">Mostra passo 2</button>
+        </div>
+        <div class="step" id="m2g4_s2" style="display:none">
+          <b>Passo 2:</b> deriva: $(5x-1)'=5$, $(2x+3)'=2$.
+          $$\\lim_{x\\to +\\infty}\\frac{5x-1}{2x+3}=\\lim\\frac{5}{2}=\\frac52.$$
+          <div class="checkline">
+            <input id="m2g4_in" type="text" placeholder="Scrivi il limite = ..." />
+            <button class="btn small" onclick="checkAnswer('m2g4_in','m2g4_fb',[
+              {type:'exact', values:[norm('5/2'), norm('2.5')]}
+            ])">Verifica</button>
+            <span id="m2g4_fb" class="feedback">—</span>
+          </div>
+        </div>
+      `;
+      MathJax.typesetPromise?.();
+    },0);
+    return html;
+  }
+
+  function g2_5(){
+    const stepsId='m2g5';
+    const html = g2_shell(5,
+      `<div><b>Testo.</b> Trasforma e calcola $\\lim_{x\\to 0^+} x\\ln x$ usando De L’Hospital.</div>`,
+      stepsId
+    );
+    setTimeout(()=>{
+      document.getElementById(stepsId).innerHTML = `
+        <div class="step" style="display:block">
+          <b>Passo 1 (trasforma):</b> $x\\ln x=\\frac{\\ln x}{1/x}$ → forma $\\infty/\\infty$.
+          <button class="btn small" onclick="reveal('m2g5_s2')">Mostra passo 2</button>
+        </div>
+        <div class="step" id="m2g5_s2" style="display:none">
+          <b>Passo 2 (H.):</b>
+          $$\\lim\\frac{\\ln x}{1/x}=\\lim\\frac{1/x}{-1/x^2}=\\lim(-x)=0.$$
+          <div class="checkline">
+            <input id="m2g5_in" type="text" placeholder="Scrivi il limite = ..." />
+            <button class="btn small" onclick="checkAnswer('m2g5_in','m2g5_fb',[
+              {type:'exact', values:[norm('0')]}
+            ])">Verifica</button>
+            <span id="m2g5_fb" class="feedback">—</span>
+          </div>
+          <div class="callout warn"><b>Errore comune:</b> pensare “$0\\cdot (-\\infty)$ = 0” (NO: è indeterminata!).</div>
+        </div>
+      `;
+      MathJax.typesetPromise?.();
+    },0);
+    return html;
+  }
+
+  function g2_6(){
+    const stepsId='m2g6';
+    const html = g2_shell(6,
+      `<div><b>Testo.</b> Studia crescenza/decrescenza di $f(x)=\\frac{(x-1)}{(x+1)}$.</div>`,
+      stepsId
+    );
+    setTimeout(()=>{
+      document.getElementById(stepsId).innerHTML = `
+        <div class="step" style="display:block">
+          <b>Passo 1 (dominio):</b> $x\\neq -1$.
+          <button class="btn small" onclick="reveal('m2g6_s2')">Mostra passo 2</button>
+        </div>
+        <div class="step" id="m2g6_s2" style="display:none">
+          <b>Passo 2 (derivata):</b>
+          $$f'(x)=\\frac{1\\cdot(x+1)-(x-1)\\cdot 1}{(x+1)^2}=\\frac{2}{(x+1)^2}>0.$$
+          Quindi $f$ è crescente su $(-\\infty,-1)$ e su $(-1,\\infty)$.
+          <div class="callout good"><b>Nota:</b> non puoi dire “crescente su tutta R” perché $x=-1$ non è nel dominio.</div>
+        </div>
+      `;
+      MathJax.typesetPromise?.();
+    },0);
+    return html;
+  }
+</script>
+<script>
+  // ==================================
+  // ESERCIZI 3 — STUDIO DI FUNZIONE (20)
+  // ==================================
+  document.getElementById('e3').innerHTML = `
+    <div class="sectionTitle">
+      <h2>Esercizi 3 — Studio di funzione (20)</h2>
+      <div class="mini">1–6 guidati (schema) • 7–20 con soluzioni a comparsa</div>
+    </div>
+
+    <div class="callout good">
+      <b>Schema fisso:</b> Dominio → Intersezioni → Segno → Limiti/Asintoti → $f'$ (monotonia) → $f''$ (concavità) → grafico.
+    </div>
+
+    ${g3_1()}
+    ${g3_2()}
+    ${g3_3()}
+    ${g3_4()}
+    ${g3_5()}
+    ${g3_6()}
+
+    <details open>
+      <summary>
+        Errori comuni del modulo (clicca)
+        <span class="sumRight"><span class="tag warn">da evitare</span></span>
+      </summary>
+      <div style="color:var(--muted)">
+        <ul>
+          <li><b>Asintoto verticale:</b> serve limite infinito (non basta “denominatore zero”).</li>
+          <li><b>Estremi assoluti:</b> su intervalli chiusi considerare anche estremi e punti non derivabili.</li>
+          <li><b>Flesso:</b> $f''(x_0)=0$ non basta; serve cambio concavità.</li>
+          <li><b>Tabelle segni:</b> includere sempre discontinuità e punti critici.</li>
+        </ul>
+      </div>
+    </details>
+
+    ${sf(7,'Studia $f(x)=\\frac{1}{x-2}$ (dominio, asintoti, monotonia).',
+      'Dominio: $x\\neq 2$. Asintoto verticale $x=2$, orizzontale $y=0$. $f\'(x)=-\\frac{1}{(x-2)^2}<0$ → decrescente su $(-\\infty,2)$ e $(2,\\infty)$.',
+      'Razionali: asintoti + segno di $f\'$.'
+    )}
+
+    ${sf(8,'Studia $f(x)=x^2-4x+3$ (vertice, zeri, monotonia).',
+      'Parabola concavità verso l’alto. Vertice in $x=2$ con $f(2)=-1$ (min). Zeri: $(x-1)(x-3)=0$ → $x=1,3$.',
+      'Completa il quadrato o usa $f\'=2x-4$.'
+    )}
+
+    ${sf(9,'Studia $f(x)=\\ln x$ (dominio, limiti, monotonia).',
+      'Dominio: $x>0$. $\\lim_{x\\to 0^+}\\ln x=-\\infty$ (asintoto verticale $x=0$). $\\lim_{x\\to +\\infty}\\ln x=+\\infty$. $f\'(x)=1/x>0$ → crescente.',
+      'Ricorda comportamento del log.'
+    )}
+
+    ${sf(10,'Studia $f(x)=e^{-x}$ (limiti e monotonia).',
+      'Dominio: R. $\\lim_{x\\to +\\infty} e^{-x}=0$ (asintoto orizzontale $y=0$). $f\'=-e^{-x}<0$ → decrescente.',
+      'Esponenziale con segno nell’esponente.'
+    )}
+
+    ${sf(11,'Studia $f(x)=x e^x$ (monotonia, estremi, limiti).',
+      'Dominio R. $f\'=e^x+xe^x=(1+x)e^x$. Punto critico $x=-1$ (min relativo). Limiti: $x\\to +\\infty$ → +∞; $x\\to -\\infty$ → 0⁻.',
+      'Fattorizza $e^x$.'
+    )}
+
+    ${sf(12,'Studia $f(x)=\\frac{x^2}{x^2+1}$ (asintoto orizzontale, monotonia).',
+      'Dominio R. Asintoto orizzontale $y=1$. $f\'=\\frac{2x(x^2+1)-x^2(2x)}{(x^2+1)^2}=\\frac{2x}{(x^2+1)^2}$. Decrescente per $x<0$, crescente per $x>0$ (min in 0).',
+      'Razionale con stessi gradi.'
+    )}
+
+    ${sf(13,'Studia $f(x)=|x|$ (monotonia e derivabilità).',
+      'Dominio R. Non derivabile in 0 (punto angoloso). Decrescente su $(-\\infty,0)$ e crescente su $(0,\\infty)$.',
+      'Derivata destra/sinistra.'
+    )}
+
+    ${sf(14,'Studia $f(x)=\\sqrt{x}$ (dominio, concavità).',
+      'Dominio $x\\ge 0$. Crescente. $f\'=1/(2\\sqrt{x})$, $f\'\'=-1/(4x^{3/2})<0$ per $x>0$ → concavità verso il basso.',
+      'Radice: attenzione a 0.'
+    )}
+
+    ${sf(15,'Studia $f(x)=\\ln(x-1)$ (asintoto verticale, monotonia).',
+      'Dominio $x>1$. Asintoto verticale $x=1$. $f\'=1/(x-1)>0$ → crescente.',
+      'Traslazione del log.'
+    )}
+
+    ${sf(16,'Studia $f(x)=x^3$ (flesso).',
+      '$f\'=3x^2\\ge 0$ → crescente. $f\'\'=6x$ cambia segno in 0 → flesso in 0.',
+      'Esempio perfetto di flesso senza massimo/minimo.'
+    )}
+
+    ${sf(17,'Studia $f(x)=x^3-3x$ (estremi e flessi).',
+      '$f\'=3x^2-3=3(x-1)(x+1)$: max in -1, min in 1. $f\'\'=6x$: flesso in 0.',
+      'Tabella segni completa.'
+    )}
+
+    ${sf(18,'Studia $f(x)=\\frac{x}{x^2+1}$ (monotonia, estremi).',
+      '$f\'=\\frac{(x^2+1)-x(2x)}{(x^2+1)^2}=\\frac{1-x^2}{(x^2+1)^2}$. Crescente per $|x|<1$, decrescente per $|x|>1$. Max in 1, min in -1.',
+      'Attenzione a fattorizzare $1-x^2$.'
+    )}
+
+    ${sf(19,'Studia $f(x)=\\frac{x^2-1}{x}$ (dominio, asintoti).',
+      'Dominio: $x\\neq 0$. Semplifica: $f(x)=x-1/x$. Asintoto obliquo $y=x$. Asintoto verticale $x=0$.',
+      'Scomposizione utile per asintoti.'
+    )}
+
+    ${sf(20,'Studio completo (sfida): $f(x)=\\frac{\\ln x}{x}$ su $(0,\\infty)$.',
+      'Dominio: $x>0$. Limiti: $x\\to 0^+$ → $-\\infty$; $x\\to +\\infty$ → 0. $f\'(x)=\\frac{1-\\ln x}{x^2}$. Critico: $\\ln x=1 \\Rightarrow x=e$ (massimo). Crescente su $(0,e)$, decrescente su $(e,\\infty)$.',
+      'Quoziente + derivata (o prodotto $\\ln x\\cdot x^{-1}$).'
+    )}
+  `;
+
+  function sf(n, text, sol, hint){
+    return `
+      <div class="ex">
+        <div class="exHead">
+          <div class="exNum">#${n}</div>
+          <div class="exMeta"><span class="tag">studio</span><span class="tag">difficoltà ↑</span></div>
+        </div>
+        <div class="exBody">
+          <div><b>Testo.</b> ${text}</div>
+          <details style="margin-top:10px">
+            <summary>Mostra traccia/soluzione <span class="sumRight"><span class="tag good">soluzione</span></span></summary>
+            <div style="color:var(--muted); margin-top:8px">
+              <div><b>Risposta:</b> ${sol}</div>
+              <div class="callout" style="margin-top:10px"><b>Idea:</b> ${hint}</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    `;
+  }
+
+  // GUIDATI 1-6
+  function g3_shell(n, title, steps){
+    return `
+      <div class="ex">
+        <div class="exHead">
+          <div class="exNum">#${n} • guidato</div>
+          <div class="exMeta"><span class="tag good">schema</span><span class="tag">passi</span></div>
+        </div>
+        <div class="exBody">
+          <div><b>Testo.</b> ${title}</div>
+          <div class="btnRow">
+            <button class="btn primary" onclick="toggleSteps('sf_g${n}')">Apri/chiudi guida</button>
+          </div>
+          <div class="steps" id="sf_g${n}">
+            ${steps}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function g3_1(){
+    return g3_shell(1,
+      'Studio (parziale) di $f(x)=\\frac{x-1}{x+1}$: dominio e asintoti.',
+      `
+      <div class="step" style="display:block">
+        <b>Dominio:</b> $x\\neq -1$.
+        <button class="btn small" onclick="reveal('sf1_s2')">Mostra asintoti</button>
+      </div>
+      <div class="step" id="sf1_s2" style="display:none">
+        <b>Asintoto verticale:</b> $x=-1$ (verifica limite infinito).<br/>
+        <b>Asintoto orizzontale:</b> gradi uguali → rapporto coeff. principali $=1$ → $y=1$.
+      </div>
+      `
+    );
+  }
+
+  function g3_2(){
+    return g3_shell(2,
+      'Studio di $f(x)=x^2-4x+3$: intersezioni e segno.',
+      `
+      <div class="step" style="display:block">
+        <b>Zeri:</b> $x^2-4x+3=(x-1)(x-3)$ → $x=1,3$.
+        <button class="btn small" onclick="reveal('sf2_s2')">Mostra segno</button>
+      </div>
+      <div class="step" id="sf2_s2" style="display:none">
+        <b>Segno:</b> parabola concavità verso l’alto → positiva fuori dagli zeri, negativa tra 1 e 3.
+      </div>
+      `
+    );
+  }
+
+  function g3_3(){
+    return g3_shell(3,
+      'Studio di $f(x)=x^3-3x$: monotonia con $f\'$.',
+      `
+      <div class="step" style="display:block">
+        <b>Derivata:</b> $f\'(x)=3x^2-3=3(x-1)(x+1)$. Punti critici: $-1,1$.
+        <button class="btn small" onclick="reveal('sf3_s2')">Mostra tabella segni</button>
+      </div>
+      <div class="step" id="sf3_s2" style="display:none">
+        <b>Segno di $f\'$:</b> + per $x<-1$, − per $-1<x<1$, + per $x>1$.<br/>
+        <b>Conclusione:</b> max in $x=-1$, min in $x=1$.
+      </div>
+      `
+    );
+  }
+
+  function g3_4(){
+    return g3_shell(4,
+      'Studio di $f(x)=x^3-3x$: concavità e flesso con $f\'\'.$',
+      `
+      <div class="step" style="display:block">
+        <b>Seconda derivata:</b> $f\'\'(x)=6x$. Candidato flesso: $x=0$.
+        <button class="btn small" onclick="reveal('sf4_s2')">Mostra concavità</button>
+      </div>
+      <div class="step" id="sf4_s2" style="display:none">
+        <b>Concavità:</b> $f\'\'<0$ per $x<0$ (verso il basso), $f\'\'>0$ per $x>0$ (verso l’alto).<br/>
+        <b>Flesso:</b> sì in $x=0$ perché cambia segno.
+      </div>
+      `
+    );
+  }
+
+  function g3_5(){
+    return g3_shell(5,
+      'Studio di $f(x)=\\frac{\\ln x}{x}$: dominio e punti critici.',
+      `
+      <div class="step" style="display:block">
+        <b>Dominio:</b> $x>0$.<br/>
+        <b>Derivata:</b> $f\'=\\frac{1-\\ln x}{x^2}$.
+        <button class="btn small" onclick="reveal('sf5_s2')">Mostra critico</button>
+      </div>
+      <div class="step" id="sf5_s2" style="display:none">
+        <b>Punto critico:</b> $1-\\ln x=0 \\Rightarrow \\ln x=1 \\Rightarrow x=e$ (massimo).
+      </div>
+      `
+    );
+  }
+
+  function g3_6(){
+    return g3_shell(6,
+      'Mini-grafico qualitativo di $f(x)=\\frac{1}{x-2}$: come “unire i pezzi”.',
+      `
+      <div class="step" style="display:block">
+        <b>1)</b> Traccia asintoto verticale $x=2$ e orizzontale $y=0$.
+        <button class="btn small" onclick="reveal('sf6_s2')">Mostra andamento</button>
+      </div>
+      <div class="step" id="sf6_s2" style="display:none">
+        <b>2)</b> $f'(x)<0$ → ogni ramo è decrescente.<br/>
+        <b>3)</b> Scegli un punto per ramo (es. $x=3\\Rightarrow f=1$; $x=1\\Rightarrow f=-1$) e disegna coerente.
+      </div>
+      `
+    );
+  }
+
+  // ==========================
+  // FLASHCARDS (3 MODULI)
+  // ==========================
+  document.getElementById('flash').innerHTML = `
+    <div class="sectionTitle">
+      <h2>Flashcard — ripasso rapido (clicca per girare)</h2>
+      <div class="mini">filtra per modulo • ideali per warm-up o exit ticket</div>
+    </div>
+
+    <div class="fcTools">
+      <label style="font-weight:900; color:var(--muted)">Modulo:</label>
+      <select id="fcModule" onchange="filterFlashcards()">
+        <option value="all">Tutti</option>
+        <option value="m1">Modulo 1 — Derivate</option>
+        <option value="m2">Modulo 2 — Teoremi</option>
+        <option value="m3">Modulo 3 — Studio di funzione</option>
+      </select>
+      <button class="btn small" onclick="document.querySelectorAll('.flashcard').forEach(c=>c.classList.remove('flipped'))">Reset</button>
+    </div>
+
+    <div class="fcGrid">
+      ${fc('m1','Definizione','Cos’è $f\'(c)$?','Il limite del rapporto incrementale: $\\lim_{h\\to 0}\\frac{f(c+h)-f(c)}{h}$.')}
+      ${fc('m1','Tangente','Equazione della tangente in $x=c$?','$y-f(c)=f\'(c)(x-c)$.')}
+      ${fc('m1','Catena','Derivata di $f(g(x))$?','$f\'(g(x))\\cdot g\'(x)$.')}
+      ${fc('m1','Quoziente','Formula del quoziente?','$\\left(\\frac{f}{g}\\right)\'=\\frac{f\'g-fg\'}{g^2}$.')}
+      ${fc('m1','Non derivabile','3 casi tipici?','Punto angoloso • cuspide • tangente verticale.')}
+      ${fc('m1','Log','Dominio di $\\ln(u)$?','Serve $u>0$.')}
+
+      ${fc('m2','Rolle','Ipotesi + tesi?','Continua in $[a,b]$, derivabile in $(a,b)$, $f(a)=f(b)$ → $\\exists c: f\'(c)=0$.')}
+      ${fc('m2','Lagrange','Valore medio?','$\\exists c: f\'(c)=\\frac{f(b)-f(a)}{b-a}$.')}
+      ${fc('m2','Monotonia','Come si usa $f\'$?','$f\'>0$ crescente, $f\'<0$ decrescente (nell’intervallo).')}
+      ${fc('m2','De L’Hospital','Quando si applica?','Solo per forme $0/0$ o $\\infty/\\infty$ + ipotesi di derivabilità.')}
+      ${fc('m2','Cauchy','Cosa dice (idea)?','Collega rapporti di incrementi e rapporti di derivate per due funzioni.')}
+      ${fc('m2','Errore','H. “a caso”?','No: prima controlla la forma indeterminata e le ipotesi.')}
+
+      ${fc('m3','Schema','1° passo studio funzione?','Dominio (vincoli!).')}
+      ${fc('m3','Asintoto V','Quando c’è?','Se il limite per $x\\to a$ è $\\pm\\infty$.')}
+      ${fc('m3','Estremi','Come li trovi?','Punti con $f\'=0$ e/o non derivabili + tabella segni di $f\'.$')}
+      ${fc('m3','Concavità','Come la decidi?','Segno di $f\'\': $f\'\'>0$ verso l’alto, $f\'\'<0$ verso il basso.')}
+      ${fc('m3','Flesso','Condizione giusta?','Serve cambio concavità (cambio segno di $f\'\').')}
+      ${fc('m3','Assoluti','Su intervallo chiuso?','Valuta anche estremi dell’intervallo + punti critici.')}
+    </div>
+
+    <div class="callout good" style="margin-top:12px">
+      <b>Uso in classe:</b> 3 flashcard “a freddo” all’inizio (diagnostica) + 3 “exit ticket” alla fine.
+    </div>
+  `;
+
+  function fc(module, top, q, a){
+    return `
+      <div class="flashcard" data-module="${module}" onclick="flipCard(this)">
+        <div class="fcInner">
+          <div class="fcFace">
+            <div class="fcTop">
+              <span>${top}</span>
+              <span class="tag">${module.toUpperCase()}</span>
+            </div>
+            <div class="fcQ">${q}</div>
+            <div class="fcHint">Clicca per vedere la risposta</div>
+          </div>
+          <div class="fcFace fcBack">
+            <div class="fcTop">
+              <span>Risposta</span>
+              <span class="tag good">OK</span>
+            </div>
+            <div class="fcA">${a}</div>
+            <div class="fcHint">Clicca per tornare alla domanda</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Re-typeset MathJax after injecting big content
+  MathJax.typesetPromise?.();
+  filterFlashcards();
+</script>
+
+
+</body>
+</html>
